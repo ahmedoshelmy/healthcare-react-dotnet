@@ -7,8 +7,6 @@ const { Title } = Typography;
 const LoginPage: React.FC = () => {
   const onFinish = (values: any) => {
     const { username, password } = values;
-
-    // TODO: Replace this with real authentication
     if (username === "admin" && password === "admin") {
       message.success("Logged in successfully!");
     } else {
@@ -18,7 +16,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="login-container">
-      <Card className="login-card" bordered={false}>
+      <Card className="login-card">
         <Title level={3} style={{ textAlign: "center" }}>
           Login to Radiology Platform
         </Title>
