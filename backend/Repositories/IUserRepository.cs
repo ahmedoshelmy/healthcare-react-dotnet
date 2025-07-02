@@ -1,9 +1,10 @@
 using backend.Models;
 
-namespace backend.Repositories;
-
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllAsync();
-    Task<int> AddAsync(User user);
+    Task<User?> GetByEmailAsync(string email);
+    bool VerifyPassword(string password, string storedHash);
+    string HashPassword(string password);
+    Task<bool> CreateAsync(User user);
+
 }

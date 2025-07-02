@@ -1,16 +1,22 @@
 import React from "react";
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { login } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 const LoginPage: React.FC = () => {
-  const onFinish = (values: any) => {
-    const { username, password } = values;
-    if (username === "admin" && password === "admin") {
+  const navigate = useNavigate();
+
+  const onFinish = async (values: any) => {
+    try {
+      const { email, password } = values;
+      await login({ email, password });
       message.success("Logged in successfully!");
-    } else {
-      message.error("Invalid credentials");
+      navigate("/exams");
+    } catch (error) {
+      message.error("Invalid email or password");
     }
   };
 
@@ -27,21 +33,22 @@ const LoginPage: React.FC = () => {
           layout="vertical"
         >
           <Form.Item
-            name="username"
-            label="Username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            name="email"
+            label="Email"
+            rules={[{ required: true, message: "Please enter your email!" }]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="Enter your username"
+              placeholder="Enter your email"
               size="large"
+              type="email"
             />
           </Form.Item>
 
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[{ required: true, message: "Please enter your password!" }]}
           >
             <Input.Password
               prefix={<LockOutlined />}

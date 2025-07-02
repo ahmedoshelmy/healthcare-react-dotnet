@@ -11,11 +11,10 @@ namespace backend.Models
         public string Email { get; set; } = null!;
 
         [Required]
-        public string PasswordHash { get; set; } = null!;   // Store hashed password only
+        public string PasswordHash { get; set; } = null!;
 
         [Required]
         public string FullName { get; set; } = null!;
 
-        public string Role { get; set; } = "Radiologist";   // Default for this app
     }
 }

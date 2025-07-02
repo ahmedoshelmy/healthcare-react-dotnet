@@ -1,11 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import AddExamPage from "./pages/AddExamPage";
-import ExamsPage from "./pages/ExamsPage";
 import { ConfigProvider, theme } from "antd";
-import ExamDetailsPage from "./pages/ExamDetailsPage";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
@@ -22,15 +17,7 @@ function App() {
         },
       }}
     >
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/add-exam" element={<AddExamPage />} />
-          <Route path="/exams" element={<ExamsPage />} />
-          <Route path="/exam/:examId" element={<ExamDetailsPage />} />
-        </Routes>
-      </Router>
+      <AppRoutes />
     </ConfigProvider>
   );
 }
