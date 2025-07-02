@@ -1,0 +1,49 @@
+## Ignore Visual Studio temporary files, build results, and
+## user-specific files.
+
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Rider-specific
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Auto-generated logs
+*.log
+
+# Publish directory
+publish/
+
+# VS Code
+.vscode/
+
+# dotCover
+*.dotCover
+
+# Database files (optional if using local DB files)
+*.mdf
+*.ldf
+
+# Entity Framework tools artifacts
+Migrations/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# dotenv (in case you use secrets in .env files)
+.env
+
+# JetBrains Rider
+.idea/
+*.sln.iml
