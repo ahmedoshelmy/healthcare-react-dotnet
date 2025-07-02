@@ -7,4 +7,6 @@ public interface IExamRepository
 {
     Task<IEnumerable<Exam>> GetAllAsync(ExamFilter? filter = null);
     Task<int> AddAsync(Exam exam);
+    Task<Exam?> GetByIdAsync(int id);
+
 }

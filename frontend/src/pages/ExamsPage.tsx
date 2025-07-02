@@ -160,6 +160,11 @@ const ExamsPage: React.FC = () => {
             loading={loading}
             rowKey="id"
             bordered
+            onRow={(record) => ({
+              onDoubleClick: () => {
+                navigate(`/exams/${record.id}`);
+              },
+            })}
           />
         </Content>
       </Layout>

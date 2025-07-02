@@ -94,4 +94,12 @@ public class ExamRepository : IExamRepository
         using var connection = _context.CreateConnection();
         return await connection.ExecuteAsync(query, exam);
     }
+
+    public async Task<Exam?> GetByIdAsync(int id)
+    {
+        var query = "SELECT * FROM Exams WHERE Id = @Id";
+        using var connection = _context.CreateConnection();
+        return await connection.QueryFirstOrDefaultAsync<Exam>(query, new { Id = id });
+    }
+
 }

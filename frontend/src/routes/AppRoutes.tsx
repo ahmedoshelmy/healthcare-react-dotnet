@@ -28,7 +28,7 @@ const AppRoutes = () => (
         }
       />
       <Route
-        path="/exam/:examId"
+        path="/exams/:examId"
         element={
           <ProtectedRoute>
             <ExamDetailsPage />

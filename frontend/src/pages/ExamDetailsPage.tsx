@@ -1,26 +1,75 @@
-import React from "react";
-import { Card, Descriptions, Button, Row, Col, Typography, Image } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Card,
+  Descriptions,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Image,
+  Spin,
+  message,
+} from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const { Title } = Typography;
 
-// Dummy data – replace with real fetch
-const dummyExam = {
-  patientId: "123456",
-  patientName: "John Doe",
-  gender: "Male",
-  birthdate: "1985-06-15",
-  email: "johndoe@example.com",
-  examType: "CT Brain",
-  dateTime: "2025-07-01T14:30:00",
-  comments: "Patient reports dizziness.",
-  status: "Completed",
-  images: ["/placeholder-1.png", "/placeholder-2.png"],
-};
+interface Exam {
+  id: number;
+  patientId: string;
+  patientName: string;
+  gender: string;
+  birthdate: string; // ISO date string
+  email?: string;
+  examType: string;
+  examDate: string; // ISO datetime string
+  comments?: string;
+  status: string;
+  images?: string[]; // Optional, can be empty or undefined
+}
 
 const ExamDetailsPage: React.FC = () => {
-  const { examId } = useParams();
+  const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
+
+  const [exam, setExam] = useState<Exam | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!examId) {
+      message.error("Invalid exam ID");
+      navigate("/exams");
+      return;
+    }
+
+    axios
+      .get<Exam>(`http://localhost:5181/api/exams/${examId}`)
+      .then((res) => {
+        setExam(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Failed to load exam details");
+        navigate("/exams");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [examId, navigate]);
+
+  if (loading) {
+    return (
+      <Spin
+        tip="Loading exam details..."
+        style={{ marginTop: 100, display: "block", textAlign: "center" }}
+      />
+    );
+  }
+
+  if (!exam) {
+    return null; // Or a fallback UI
+  }
 
   return (
     <div style={{ padding: 24 }}>
@@ -35,18 +84,16 @@ const ExamDetailsPage: React.FC = () => {
       <Card bordered style={{ marginBottom: 24 }}>
         <Descriptions title="Patient Information" column={2} size="middle">
           <Descriptions.Item label="Patient ID">
-            {dummyExam.patientId}
+            {exam.patientId}
           </Descriptions.Item>
-          <Descriptions.Item label="Name">
-            {dummyExam.patientName}
-          </Descriptions.Item>
-          <Descriptions.Item label="Gender">
-            {dummyExam.gender}
-          </Descriptions.Item>
+          <Descriptions.Item label="Name">{exam.patientName}</Descriptions.Item>
+          <Descriptions.Item label="Gender">{exam.gender}</Descriptions.Item>
           <Descriptions.Item label="Birthdate">
-            {dummyExam.birthdate}
+            {new Date(exam.birthdate).toLocaleDateString()}
           </Descriptions.Item>
-          <Descriptions.Item label="Email">{dummyExam.email}</Descriptions.Item>
+          <Descriptions.Item label="Email">
+            {exam.email ?? "-"}
+          </Descriptions.Item>
         </Descriptions>
 
         <Descriptions
@@ -55,17 +102,13 @@ const ExamDetailsPage: React.FC = () => {
           size="middle"
           style={{ marginTop: 24 }}
         >
-          <Descriptions.Item label="Type">
-            {dummyExam.examType}
-          </Descriptions.Item>
+          <Descriptions.Item label="Type">{exam.examType}</Descriptions.Item>
           <Descriptions.Item label="Date & Time">
-            {new Date(dummyExam.dateTime).toLocaleString()}
+            {new Date(exam.examDate).toLocaleString()}
           </Descriptions.Item>
-          <Descriptions.Item label="Status">
-            {dummyExam.status}
-          </Descriptions.Item>
+          <Descriptions.Item label="Status">{exam.status}</Descriptions.Item>
           <Descriptions.Item label="Comments">
-            {dummyExam.comments}
+            {exam.comments ?? "-"}
           </Descriptions.Item>
         </Descriptions>
       </Card>
@@ -74,30 +117,22 @@ const ExamDetailsPage: React.FC = () => {
         <Col span={16}>
           <Card title="Images" bordered>
             <Row gutter={[16, 16]}>
-              {dummyExam.images.map((src, index) => (
-                <Col span={12} key={index}>
-                  <Image
-                    src={src}
-                    alt={`Exam Image ${index + 1}`}
-                    width="100%"
-                    style={{ borderRadius: 8 }}
-                    placeholder
-                  />
-                </Col>
-              ))}
+              {exam.images && exam.images.length > 0 ? (
+                exam.images.map((src, index) => (
+                  <Col span={12} key={index}>
+                    <Image
+                      src={src}
+                      alt={`Exam Image ${index + 1}`}
+                      width="100%"
+                      style={{ borderRadius: 8 }}
+                      placeholder
+                    />
+                  </Col>
+                ))
+              ) : (
+                <p>No images available.</p>
+              )}
             </Row>
-          </Card>
-        </Col>
-
-        <Col span={8}>
-          <Card title="Measurement Tools" bordered>
-            <p>🧪 Distance Measurement (coming soon)</p>
-            <p>📏 Angle Tool (coming soon)</p>
-            <p>📐 Zoom/Pan</p>
-            <p>🖊️ Annotate</p>
-            <Button type="primary" disabled block>
-              Export Measurements
-            </Button>
           </Card>
         </Col>
       </Row>

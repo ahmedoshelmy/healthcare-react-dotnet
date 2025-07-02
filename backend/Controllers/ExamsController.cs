@@ -29,4 +29,13 @@ public class ExamsController : ControllerBase
         await _repo.AddAsync(exam);
         return Ok("Created");
     }
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var exam = await _repo.GetByIdAsync(id);
+        if (exam == null)
+            return NotFound();
+        return Ok(exam);
+    }
+
 }
